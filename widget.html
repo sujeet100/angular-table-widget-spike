@@ -1,5 +1,4 @@
 <div ng-controller="rootController">
-	<div>{{students}}</div>
-	<div table data="students" columns="'name, age, city'" headers="'Name, Age, City'">
+	<div table data="students" columns="[{field:'name', header: 'Name', sort:true, predicate:['name','age']},{field:'city', header: 'City', sort:true, predicate:'city'},{field:'age', header: 'Age', sort:true, predicate:'age'}]" defaultsortpredicate="'name'">
 	</div>
 </div>
