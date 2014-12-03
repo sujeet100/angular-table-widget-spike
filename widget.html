@@ -1,4 +1,4 @@
 <div ng-controller="rootController">
-	<div table data="students" columns="[{field:'name', header: 'Name', sort:true, predicate:['name','age']},{field:'city', header: 'City', sort:false, predicate:'city'},{field:'age', header: 'Age', sort:true, predicate:'age'}]" default-sort-predicate="'name'" rows-per-page="5" rows-shown-text="'showing {0} of {1} records'">
+	<div table data="students" columns="[{field:'name', header: 'Name', sort:true, predicate:['name','age']},{field:'city', header: 'City', sort:true, predicate:'city',showIconField:'fail'},{field:'age', header: 'Age', sort:true, predicate:'age'}]" default-sort-predicate="'name'" rows-per-page="5" rows-shown-text="'showing {0} of {1} records'">
 	</div>
 </div>
