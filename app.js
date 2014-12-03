@@ -29,25 +29,46 @@ angular.module("widget", [])
     		scope:{
     			data:'=',
                 columns:'=',
-                defaultsortpredicate: '=',
+                defaultSortPredicate: '=',
+                rowsPerPage:'=',
+                rowsShownText:'='
     		},
     		link: function(scope, element, attr){
 
                     var tableElement = [];
-                    console.log(scope.defaultsortpredicate);
-                    scope.sortpredicate=scope.defaultsortpredicate
+                    scope.sortpredicate=scope.defaultSortPredicate
+                    scope.rowsVisible = scope.rowsPerPage;
                     tableElement.push('<style type="text/css">span{margin:30px;}</style>');
-                    tableElement.push('<span ng-repeat="head in columns">');
-                    tableElement.push('<a href="" ng-click="changePredicate(head.predicate)"><strong>{{head.header}}</strong></a></span>');
-                     tableElement.push('<div ng-repeat="student in data  |orderBy:sortpredicate:reverse">');
-                         tableElement.push('<span ng-repeat="column in columns">');
-                         tableElement.push('{{student[column.field]}}</span>');
-                     tableElement.push('</div>');
+                   
+                   //headers
+                    tableElement.push('<span ng-repeat="column in columns">');
+                        tableElement.push('<a ng-if="column.sort" href="" ng-click="changePredicate(column.predicate)"><strong>{{column.header}}</strong></a>');
+                        tableElement.push('<span ng-if="!column.sort"><strong>{{column.header}}</strong></span>');
+                    tableElement.push('</span>');
+
+                    //rows
+                    tableElement.push('<div ng-repeat="student in data | orderBy:sortpredicate:reverse | limitTo:rowsVisible">');
+                        tableElement.push('<span ng-repeat="column in columns">');
+                        tableElement.push('{{student[column.field]}}</span>');
+                    tableElement.push('</div>');
+
+                    //pagination
+                    
+                
+                    tableElement.push('<div><span>');
+                    tableElement.push(String.format(scope.rowsShownText, '{{rowsVisible >data.length ? data.length : rowsVisible}}', '{{data.length}}'));
+                    tableElement.push('</span>');
+                    tableElement.push('<a href="" ng-if="rowsVisible < data.length" ng-click="showMoreRows();">Show more</a></div>');
+
+
 
                      scope.changePredicate= function(predicate){
-                        console.log(scope.sortpredicate);
                         scope.sortpredicate=predicate;
                         scope.reverse=!scope.reverse;
+                     } 
+
+                    scope.showMoreRows= function(){
+                        scope.rowsVisible+=scope.rowsPerPage;
                      }   
 
 
@@ -56,3 +77,19 @@ angular.module("widget", [])
     		}
     	}
     }]);
+
+String.format = function() {
+    // The string containing the format items (e.g. "{0}")
+    // will and always has to be the first argument.
+    var theString = arguments[0];
+    
+    // start with the second argument (i = 1)
+    for (var i = 1; i < arguments.length; i++) {
+        // "gm" = RegEx options for Global search (more than one instance)
+        // and for Multiline search
+        var regEx = new RegExp("\\{" + (i - 1) + "\\}", "gm");
+        theString = theString.replace(regEx, arguments[i]);
+    }
+    
+    return theString;
+}
